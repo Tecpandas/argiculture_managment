@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmShare: Weather Forecast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #2196F3;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-container input {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            width: 60%;
+            max-width: 300px;
+        }
+
+        .search-container button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+
+        .current-weather {
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .current-weather h2 {
+            margin: 0;
+            color: #4CAF50;
+        }
+
+        .current-temp {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .forecast-day {
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .forecast-day h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .forecast-icon {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+
+        .farm-advice {
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .farm-advice h2 {
+            color: #4CAF50;
+        }
+
+        .farm-advice ul {
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .current-weather {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .current-weather > div {
+                margin-bottom: 1rem;
+            }
+
+            .search-container input {
+                width: 100%;
+            }
+
+            .search-container button {
+                width: 100%;
+                border-radius: 0 0 4px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>FarmShare Weather Forecast</h1>
+    </div>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="location-search" placeholder="Enter city or state">
+            <button onclick="searchWeather()">Search</button>
+        </div>
+        <div class="current-weather">
+            <div>
+                <h2>Current Weather in <span id="current-location">Your Location</span></h2>
+                <p id="current-condition">Sunny</p>
+            </div>
+            <div class="current-temp" id="current-temp">25°C</div>
+            <div>
+                <p>Humidity: <span id="current-humidity">60%</span></p>
+                <p>Wind: <span id="current-wind">10 km/h NE</span></p>
+            </div>
+        </div>
+        <div class="forecast" id="forecast-container">
+            <!-- Forecast cards will be dynamically populated here -->
+        </div>
+        <div class="farm-advice">
+            <h2>Farming Advice</h2>
+            <ul>
+                <li>Check forecast updates for rain or heat before fieldwork.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '9d35edb9b54410062b4fd180631a2ec6'; // OpenWeatherMap API key
+
+        function searchWeather() {
+            const location = document.getElementById('location-search').value;
+            if (!location) {
+                alert('Please enter a city or state');
+                return;
+            }
+
+            // API call to OpenWeatherMap for current weather
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod !== 200) {
+                        alert('Location not found');
+                        return;
+                    }
+
+                    // Update current weather info
+                    document.getElementById('current-location').textContent = data.name;
+                    document.getElementById('current-condition').textContent = data.weather[0].description;
+                    document.getElementById('current-temp').textContent = `${data.main.temp}°C`;
+                    document.getElementById('current-humidity').textContent = `${data.main.humidity}%`;
+                    document.getElementById('current-wind').textContent = `${data.wind.speed} km/h`;
+
+                    // Now, call the 5-day forecast API
+                    fetchForecast(data.name);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error fetching weather data');
+                });
+        }
+
+        function fetchForecast(location) {
+            // Fetch 5-day forecast from OpenWeatherMap
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=metric`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update forecast section
+                    const forecastContainer = document.getElementById('forecast-container');
+                    forecastContainer.innerHTML = ''; // Clear previous forecast
+
+                    // Loop through forecast data (every 8 intervals is 24 hours)
+                    for (let i = 0; i < data.list.length; i += 8) {
+                        const forecast = data.list[i];
+                        const date = new Date(forecast.dt_txt);
+
+                        // Create forecast day card
+                        const forecastCard = `
+                            <div class="forecast-day">
+                                <h3>${date.toLocaleDateString('en-US', { weekday: 'long' })}</h3>
+                                <div class="forecast-icon">☀️</div>
+                                <p>High: ${forecast.main.temp_max}°C</p>
+                                <p>Low: ${forecast.main.temp_min}°C</p>
+                                <p>Precipitation: ${forecast.pop * 100}%</p>
+                            </div>
+                        `;
+                        forecastContainer.innerHTML += forecastCard;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error fetching forecast data');
+                });
+        }
+    </script>
+</body>
+</html>

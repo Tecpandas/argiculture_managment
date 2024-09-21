@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmShare Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+        }
+        .navbar {
+            background-color: #2196F3;
+            padding: 20px;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            margin: 0;
+        }
+        .navbar-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .login-button {
+            background-color: white;
+            color: #2196F3;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .login-button:hover {
+            background-color: #f2f2f2;
+        }
+        .dashboard-content {
+            margin: 20px;
+        }
+        section {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>FarmShare Dashboard</h1>
+        <div class="navbar-buttons">
+            <a href="{{ url_for('index') }}" class="login-button">Home</a>
+            <a href="{{ url_for('chatroom') }}" class="login-button">Chatroom</a>
+            <a href="{{ url_for('weather') }}" class="login-button">Weather</a>
+            <a href="{{ url_for('dashboard') }}" class="login-button">Dashboard</a>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <section>
+            <h2>Crop Tasks</h2>
+            {% for task in crop_tasks %}
+            <div>
+                <strong>{{ task.task }}</strong> - {{ task.date }} - {{ task.status }}
+            </div>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h2>Market Information</h2>
+            {% for crop, info in market_info.items() %}
+            <div>
+                <strong>{{ crop }}</strong>: Price - {{ info.price }}, Trend - {{ info.trend }}
+            </div>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h2>Weather Information</h2>
+            <div>
+                <strong>Current:</strong> {{ weather_info.current }}<br>
+                <strong>Forecast:</strong> {{ weather_info.forecast }}
+            </div>
+        </section>
+
+        <section>
+            <h2>Notifications</h2>
+            {% for notification in notifications %}
+            <div>
+                <strong>{{ notification.date }}</strong>: {{ notification.message }}
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+</body>
+</html>

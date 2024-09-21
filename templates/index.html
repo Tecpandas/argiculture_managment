@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmShare: Local Equipment Rental</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #2196F3;
+            padding: 20px;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .navbar-buttons {
+            display: flex;
+            gap: 10px; /* Adjust spacing between buttons */
+        }
+
+        .login-button, .register-button {
+            background-color: white;
+            color: #2196F3;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .login-button:hover, .register-button:hover {
+            background-color: #f2f2f2;
+        }
+
+        .register-box {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            color: #2196F3;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .register-box a {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .register-box a:hover {
+            background-color: #1E88E5;
+        }
+
+        .equipment-list {
+            margin: 20px;
+        }
+
+        .equipment-item {
+            background-color: #1E1E1E;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+        }
+
+        .equipment-item h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .post-equipment {
+            margin: 20px;
+            padding: 15px;
+            background-color:#1E1E1E;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ffffff;
+            background-color: #333333;
+            color: #ffffff; 
+        }
+
+        .form-group button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .form-group button:hover {
+            background-color: #1E88E5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>FarmShare: Local Equipment Rental</h1>
+        <div class="navbar-buttons">
+            {% if 'user_id' in session %}
+                
+       
+                <a href="{{ url_for('login') }}" class="login-button">Login</a>
+                <a href="{{ url_for('register') }}" class="register-button">Register</a>
+            {% endif %}
+            <a href="{{ url_for('chatroom') }}" class="login-button">Chatroom</a>
+            <a href="{{ url_for('weather') }}" class="login-button">Weather</a>
+        </div>
+    </div>
+
+    <!-- Register Button Box -->
+    
+    <!-- Equipment List -->
+    <div class="equipment-list">
+        {% for equipment in equipment_list %}
+        <div class="equipment-item">
+            <h3>{{ equipment.name }}</h3>
+            <p>Price: {{ equipment.price }}</p>
+            <p>Owner: {{ equipment.owner }}</p>
+            <p>Location: {{ equipment.location }}</p>
+            <a href="{{ url_for('request_equipment', equipment_name=equipment.name) }}">Request to Rent</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Form to Post Equipment -->
+    <div class="post-equipment">
+        <h3>List Your Equipment for Rent</h3>
+        <form action="{{ url_for('post_equipment') }}" method="POST">
+            <div class="form-group">
+                <label for="name">Equipment Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price (e.g., $50/day):</label>
+                <input type="text" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="owner">Owner Name:</label>
+                <input type="text" id="owner" name="owner" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Post Equipment</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
