@@ -27,9 +27,51 @@
             margin: 0;
         }
 
-        .navbar-buttons {
+        .navbar-left, .navbar-right {
             display: flex;
-            gap: 10px; /* Adjust spacing between buttons */
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Settings Dropdown */
+        .settings-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .settings-button {
+            background-color: white;
+            color: #2196F3;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .settings-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .settings-content a {
+            color: #2196F3;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .settings-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .settings-dropdown:hover .settings-content {
+            display: block;
         }
 
         .login-button, .register-button {
@@ -88,7 +130,7 @@
         .post-equipment {
             margin: 20px;
             padding: 15px;
-            background-color:#1E1E1E;
+            background-color: #1E1E1E;
             border: 1px solid #ffffff;
             border-radius: 5px;
         }
@@ -128,11 +170,25 @@
 <body>
 
     <div class="navbar">
+        <!-- Left side (Settings button) -->
+        <div class="navbar-left">
+            <div class="settings-dropdown">
+                <button class="settings-button">Settings</button>
+                <div class="settings-content">
+                    <a href="{{url_for('profile')}}">Profile</a>
+                    <a href=>mode</a>
+                    <a href=>language</a>
+                   
+                </div>
+            </div>
+        </div>
+
+        <!-- Center (Title) -->
         <h1>FarmShare: Local Equipment Rental</h1>
-        <div class="navbar-buttons">
+
+        <!-- Right side (Login/Register/Other buttons) -->
+        <div class="navbar-right">
             {% if 'user_id' in session %}
-                
-       
                 <a href="{{ url_for('login') }}" class="login-button">Login</a>
                 <a href="{{ url_for('register') }}" class="register-button">Register</a>
             {% endif %}
@@ -141,8 +197,6 @@
         </div>
     </div>
 
-    <!-- Register Button Box -->
-    
     <!-- Equipment List -->
     <div class="equipment-list">
         {% for equipment in equipment_list %}

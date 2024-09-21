@@ -252,6 +252,11 @@ def weather():
         "conditions": "Clear"
     }
     return render_template('weather.html', weather_data=weather_data)
+@app.route('/profile')
+def profile():
+    # Your profile view logic here
+    return render_template('profile.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
