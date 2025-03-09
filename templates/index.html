@@ -4,32 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FarmShare: Local Equipment Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000000;
-            color: #ffffff;
-            margin: 0;
+        :root {
+            --primary-color: #4CAF50; /* Green, adjust as needed */
+            --secondary-color: #263238; /* Darker Blue/Grey for contrast */
+            --text-color-light: #EEEEEE;
+            --text-color-dark: #212121;
+            --background-color: #121212; /* Dark background */
+            --card-background: #1E1E1E; /* Slightly lighter for cards */
+            --accent-color: #FFC107; /* Yellow/Amber for highlights */
         }
 
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden; /* Hide horizontal scroll */
+        }
+
+        /* Gradient Background (Subtle) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.1), rgba(38, 50, 56, 0.1)); /* Primary & Secondary colors */
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navbar */
         .navbar {
-            background-color: #2196F3;
-            padding: 20px;
-            color: rgb(255, 255, 255);
-            text-align: center;
-            font-size: 24px;
+            background-color: var(--secondary-color);
+            padding: 1.5rem 2rem;
+            color: var(--text-color-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative; /* For dropdown positioning */
         }
 
         .navbar h1 {
             margin: 0;
+            font-weight: 500;
+            font-size: 1.75rem;
+            letter-spacing: 0.5px;
+            cursor: pointer; /* Make clickable */
+            transition: color 0.3s ease;
+        }
+
+        .navbar h1:hover {
+            color: var(--primary-color);
         }
 
         .navbar-left, .navbar-right {
             display: flex;
-            gap: 10px;
+            gap: 1rem;
             align-items: center;
         }
 
@@ -40,130 +77,240 @@
         }
 
         .settings-button {
-            background-color: white;
-            color: #2196F3;
+            background-color: transparent;
+            color: var(--text-color-light);
             border: none;
-            padding: 10px 20px;
+            padding: 0.75rem 1.25rem;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Space for icon */
+        }
+
+        .settings-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .settings-content {
             display: none;
             position: absolute;
-            background-color: white;
+            top: 100%;
+            right: 0; /* Align to right side */
+            background-color: var(--card-background);
             min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
             z-index: 1;
             border-radius: 5px;
+            overflow: hidden; /* Hide overflow for rounded corners */
         }
 
         .settings-content a {
-            color: #2196F3;
-            padding: 12px 16px;
+            color: var(--text-color-light);
+            padding: 0.75rem 1rem;
             text-decoration: none;
             display: block;
+            transition: background-color 0.3s ease;
         }
 
         .settings-content a:hover {
-            background-color: #f1f1f1;
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .settings-dropdown:hover .settings-content {
             display: block;
         }
 
+        /* Buttons */
         .login-button, .register-button {
-            background-color: white;
-            color: #2196F3;
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
             border: none;
-            padding: 10px 20px;
+            padding: 0.75rem 1.25rem;
             cursor: pointer;
             border-radius: 5px;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
         .login-button:hover, .register-button:hover {
-            background-color: #f2f2f2;
+            background-color: var(--primary-color-dark);
         }
 
+        /* Adjusted Colors */
         .register-box {
-            margin: 20px;
-            padding: 20px;
-            background-color: white;
-            color: #2196F3;
-            border-radius: 5px;
+            margin: 2rem auto; /* Centered */
+            padding: 2rem;
+            background-color: var(--card-background);
+            color: var(--text-color-light);
+            border-radius: 8px;
             text-align: center;
+            max-width: 500px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .register-box a {
-            background-color: #2196F3;
-            color: white;
-            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
+            padding: 0.75rem 1.5rem;
             border-radius: 5px;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: inline-block; /* To apply margin correctly */
+            margin-top: 1rem;
         }
 
         .register-box a:hover {
-            background-color: #1E88E5;
+            background-color: var(--primary-color-dark);
         }
 
+        /* Equipment List */
         .equipment-list {
-            margin: 20px;
+            margin: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 1.5rem;
         }
 
         .equipment-item {
-            background-color: #1E1E1E;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .equipment-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
         .equipment-item h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 0.75rem 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--accent-color);
         }
 
-        .post-equipment {
-            margin: 20px;
-            padding: 15px;
-            background-color: #1E1E1E;
-            border: 1px solid #ffffff;
+        .equipment-item p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .equipment-item a {
+            display: inline-block;
+            margin-top: 1rem;
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
+            padding: 0.6rem 1rem;
             border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .equipment-item a:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        /* Post Equipment Form */
+        .post-equipment {
+            margin: 2rem;
+            padding: 2rem;
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .post-equipment h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-align: center;
+            color: var(--accent-color);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-color-light);
         }
 
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
-            padding: 8px;
+            padding: 0.75rem;
             border-radius: 4px;
-            border: 1px solid #ffffff;
+            border: none;
             background-color: #333333;
-            color: #ffffff; 
+            color: var(--text-color-light);
+            font-size: 1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #444;
         }
 
         .form-group button {
-            background-color: #2196F3;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
             border: none;
-            padding: 10px 15px;
+            padding: 0.8rem 1.5rem;
             cursor: pointer;
             border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
         .form-group button:hover {
-            background-color: #1E88E5;
+            background-color: var(--primary-color-dark);
+        }
+
+        /* Footer (Simple) */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--text-color-light);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .navbar-left, .navbar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .equipment-list {
+                grid-template-columns: 1fr; /* Stack on small screens */
+            }
+
+            .post-equipment {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -173,12 +320,14 @@
         <!-- Left side (Settings button) -->
         <div class="navbar-left">
             <div class="settings-dropdown">
-                <button class="settings-button">Settings</button>
+                <button class="settings-button">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
                 <div class="settings-content">
-                    <a href="{{url_for('profile')}}">Profile</a>
-                    <a href=>mode</a>
-                    <a href=>language</a>
-                   
+                    <a href="{{url_for('profile')}}"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#"><i class="fas fa-adjust"></i> Mode</a>
+                    <a href="#"><i class="fas fa-globe"></i> Language</a>
                 </div>
             </div>
         </div>
@@ -188,12 +337,12 @@
 
         <!-- Right side (Login/Register/Other buttons) -->
         <div class="navbar-right">
-            {% if 'user_id' in session %}
-                <a href="{{ url_for('login') }}" class="login-button">Login</a>
-                <a href="{{ url_for('register') }}" class="register-button">Register</a>
+            {% if 'user_id' not in session %}
+                <a href="{{ url_for('login') }}" class="login-button"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{{ url_for('register') }}" class="register-button"><i class="fas fa-user-plus"></i> Register</a>
             {% endif %}
-            <a href="{{ url_for('chatroom') }}" class="login-button">Chatroom</a>
-            <a href="{{ url_for('weather') }}" class="login-button">Weather</a>
+            <a href="{{ url_for('chatroom') }}" class="login-button"><i class="fas fa-comments"></i> Chatroom</a>
+            <a href="{{ url_for('weather') }}" class="login-button"><i class="fas fa-sun"></i> Weather</a>
         </div>
     </div>
 
@@ -205,7 +354,7 @@
             <p>Price: {{ equipment.price }}</p>
             <p>Owner: {{ equipment.owner }}</p>
             <p>Location: {{ equipment.location }}</p>
-            <a href="{{ url_for('request_equipment', equipment_name=equipment.name) }}">Request to Rent</a>
+            <a href="{{ url_for('request_equipment', equipment_name=equipment.name) }}"><i class="fas fa-hand-holding-usd"></i> Request to Rent</a>
         </div>
         {% endfor %}
     </div>
@@ -231,10 +380,14 @@
                 <input type="text" id="location" name="location" required>
             </div>
             <div class="form-group">
-                <button type="submit">Post Equipment</button>
+                <button type="submit"><i class="fas fa-upload"></i> Post Equipment</button>
             </div>
         </form>
     </div>
+
+    <footer>
+        © 2024 FarmShare. All rights reserved.
+    </footer>
 
 </body>
 </html>
